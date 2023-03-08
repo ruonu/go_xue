@@ -10,6 +10,13 @@ import (
 	"os"
 )
 
+type user struct {
+	Uid        int    `json:"uid"`
+	UserName   string `json:"user_name"`
+	Department string `json:"department"`
+	Time1      string `json:"time_1"`
+}
+
 func main() {
 	db, err := sql.Open("mysql", "test:123456@tcp(localhost:3306)/test?charset=utf8")
 	checkErr(err)
@@ -19,19 +26,14 @@ func main() {
 	//搜索数据
 	rows, err := db.Query("SELECT * FROM user")
 	checkErr(err)
-
+	var data []user
 	for rows.Next() {
-		var uid int
-		var username string
-		var department string
-		var time1 string
-		err = rows.Scan(&uid, &username, &department, &time1)
-		checkErr(err)
 
-		fmt.Println(uid)
-		fmt.Println(username)
-		fmt.Println(department)
-		fmt.Println(time1)
+		info := user{}
+		err = rows.Scan(&info.Uid, &info.UserName, &info.Department, &info.Time1)
+		checkErr(err)
+		data = append(data, info)
+		fmt.Println(info)
 	}
 
 	//输出测试结果
@@ -39,7 +41,7 @@ func main() {
 
 	//Getdict_mysql()
 
-	b, err := json.Marshal(rows)
+	b, err := json.Marshal(data)
 	if err != nil {
 		log.Fatalln(err)
 	}
