@@ -55,36 +55,6 @@ func main() {
 
 	out.WriteTo(os.Stdout)
 
-	//执行查询操作
-
-	rows2, err := db.Query("SELECT * FROM `user` WHERE `id` > 0")
-	if err != nil {
-
-		fmt.Println("select db failed,err:", err)
-
-		return
-
-	}
-	// 这里获取的rows是从数据库查的满足user_id>=5的所有行的email信息，rows.Next(),用于循环获取所有
-	fmt.Println("新的查询方式")
-
-	for rows2.Next() {
-
-		var s string
-
-		err = rows2.Scan(&s)
-		if err != nil {
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		fmt.Println(rows2)
-
-	}
-
 	db.Close()
 
 }
